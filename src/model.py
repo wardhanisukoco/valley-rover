@@ -13,11 +13,71 @@ class MyModel(nn.Module):
         # to size appropriately the output of your classifier, and if you use
         # the Dropout layer, use the variable "dropout" to indicate how much
         # to use (like nn.Dropout(p=dropout))
+        self.conv_block = nn.Sequential(
+            nn.Conv2d(3, 16, 3, 1, 1),
+            nn.BatchNorm2d(16),
+            nn.MaxPool2d(2,2),
+            nn.ReLU(),
+            nn.Dropout(p=dropout),
+            
+            nn.Conv2d(16, 32, 3, 1, 1),
+            nn.BatchNorm2d(32),
+            nn.MaxPool2d(2,2),
+            nn.ReLU(),
+            nn.Dropout(p=dropout),
+            
+            nn.Conv2d(32, 64, 3, 1, 1),
+            nn.BatchNorm2d(64),
+            nn.MaxPool2d(2,2),
+            nn.ReLU(),
+            nn.Dropout(p=dropout),
+            
+            nn.Conv2d(64, 128, 3, 1, 1),
+            nn.BatchNorm2d(128),
+            nn.MaxPool2d(2,2),
+            nn.ReLU(),
+            nn.Dropout(p=dropout),
+            
+            nn.Conv2d(128, 256, 3, 1, 1),
+            nn.BatchNorm2d(256),
+            nn.MaxPool2d(2,2),
+            nn.ReLU(),
+            nn.Dropout(p=dropout),
+            
+            nn.Conv2d(256, 256, 3, 1, 1),
+            nn.MaxPool2d(2,2),
+            nn.ReLU(),        
+        )
+        
+        self.gap = nn.AdaptiveAvgPool2d(1)
+        
+        self.mlp_block = nn.Sequential(
+            nn.Linear(256, 128),
+            nn.BatchNorm1d(128),
+            nn.ReLU(),
+            nn.Dropout(p=dropout),
+            
+            nn.Linear(128, 64),
+            nn.BatchNorm1d(64),
+            nn.ReLU(),
+            nn.Dropout(p=dropout),
+            
+            nn.Linear(64, 32),
+            nn.BatchNorm1d(32),
+            nn.ReLU(),
+            nn.Dropout(p=dropout),
+            
+            nn.Linear(32, num_classes)
+        )
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         # YOUR CODE HERE: process the input tensor through the
         # feature extractor, the pooling and the final linear
         # layers (if appropriate for the architecture chosen)
+        x = self.conv_block(x)
+        x = self.gap(x)
+        x = x.view(x.size(0), -1)  # flatten featured map
+        x = self.mlp_block(x)
         return x
 
 
@@ -39,7 +99,7 @@ def test_model_construction(data_loaders):
     model = MyModel(num_classes=23, dropout=0.3)
 
     dataiter = iter(data_loaders["train"])
-    images, labels = dataiter.next()
+    images, labels = next(dataiter)
 
     out = model(images)
 
