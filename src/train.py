@@ -79,9 +79,9 @@ def valid_one_epoch(valid_dataloader, model, loss):
                 data, target = data.cuda(), target.cuda()
 
             # 1. forward pass: compute predicted outputs by passing inputs to the model
-            output  = # YOUR CODE HERE
+            output  = model(data)
             # 2. calculate the loss
-            loss_value  = # YOUR CODE HERE
+            loss_value  = loss(output, target)
 
             # Calculate average validation loss
             valid_loss = valid_loss + (
