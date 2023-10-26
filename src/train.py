@@ -61,7 +61,7 @@ def valid_one_epoch(valid_dataloader, model, loss):
     with torch.no_grad():
 
         # set the model to evaluation mode
-        # YOUR CODE HERE
+        model.eval()
 
         if torch.cuda.is_available():
             model.cuda()
