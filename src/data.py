@@ -128,6 +128,11 @@ def get_data_loaders(
 
     data_loaders["test"] = torch.utils.data.DataLoader(
         # YOUR CODE HERE (remember to add shuffle=False as well)
+        test_data,
+        shuffle=False,
+        sampler=test_sampler,
+        batch_size=batch_size,
+        num_workers=num_workers
     )
 
     return data_loaders
