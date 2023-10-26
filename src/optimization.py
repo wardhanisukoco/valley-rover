@@ -10,7 +10,7 @@ def get_loss():
     """
 
     # YOUR CODE HERE: select a loss appropriate for classification
-    loss  = # YOUR CODE HERE
+    loss  = nn.CrossEntropyLoss()
 
     return loss
 
