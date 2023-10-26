@@ -16,9 +16,11 @@ def train_one_epoch(train_dataloader, model, optimizer, loss):
     if torch.cuda.is_available():
         # YOUR CODE HERE: transfer the model to the GPU
         # HINT: use .cuda()
+        model = model.cuda()
 
     # YOUR CODE HERE: set the model to training mode
-    
+    model.train()
+
     train_loss = 0.0
 
     for batch_idx, (data, target) in tqdm(
@@ -33,15 +35,15 @@ def train_one_epoch(train_dataloader, model, optimizer, loss):
             data, target = data.cuda(), target.cuda()
 
         # 1. clear the gradients of all optimized variables
-        # YOUR CODE HERE:
+        optimizer.zero_grad()
         # 2. forward pass: compute predicted outputs by passing inputs to the model
-        output  = # YOUR CODE HERE
+        output  = model(data)
         # 3. calculate the loss
-        loss_value  = # YOUR CODE HERE
+        loss_value  = loss(output, target)
         # 4. backward pass: compute gradient of the loss with respect to model parameters
-        # YOUR CODE HERE:
+        loss_value.backward()
         # 5. perform a single optimization step (parameter update)
-        # YOUR CODE HERE:
+        optimizer.step()
 
         # update average training loss
         train_loss = train_loss + (
