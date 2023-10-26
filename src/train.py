@@ -130,7 +130,7 @@ def optimize(data_loaders, model, optimizer, loss, n_epochs, save_path, interact
             print(f"New minimum validation loss: {valid_loss:.6f}. Saving model ...")
 
             # Save the weights to save_path
-            # YOUR CODE HERE
+            torch.save(model.state_dict(), save_path)
 
             valid_loss_min = valid_loss
 
@@ -157,7 +157,7 @@ def one_epoch_test(test_dataloader, model, loss):
     with torch.no_grad():
 
         # set the model to evaluation mode
-        # YOUR CODE HERE
+        model.eval()
 
         if torch.cuda.is_available():
             model = model.cuda()
